@@ -3,5 +3,6 @@
     title: string
     done:  boolean
     description: string
+    category: string
     time: 'today'|'tomorrow'|'week'|'month'
   }

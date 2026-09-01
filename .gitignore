@@ -40,7 +40,9 @@ yarn-error.*
 /ios
 /android
 
+# Claude
+.claude/
+
 cd ruta/al/taskflow
 git checkout preentrega4
 echo ".claude/" >> .gitignore
-./claude

@@ -1,64 +1,38 @@
-import { useState } from 'react'
-import { name } from '../data'
+import { View, Text, StyleSheet } from 'react-native'
 import Header from '../components/Header'
-import TaskForm from '../components/TaskForm'
-import EmptyState from '../components/EmptyState'
-import FlatListScreen from './FlatListScreen'
-import TaskDetailScreen from './TaskDetailScreen'
-import type { DemoTask } from '../types'
+import CardTask from '../components/CardTask'
+import { tasks, name } from '../data'
+import { textSize } from '../theme'
 
 const HomeScreen = () => {
-  const [taskList, setTaskList] = useState<DemoTask[]>([])
-  const [selectedTask, setSelectedTask] = useState<DemoTask | null>(null)
+  return (   <>
+      <View style={styles.gretting}> 
+        <Text style={styles.grettingText}>Hola, buenas noches {name.slice(0, 5)}</Text>
+      </View> 
+      <Header name={name} totalTasks={tasks.length} />
+      <View style={{ width: '100%', alignItems: 'flex-start' }}>
+        <Text style={{ fontSize: textSize.subtitle, fontWeight: 'bold' }}>  
+          Tareas completadas {tasks.filter((task) => task.completed).length} / {tasks.length}
+        </Text>
+      </View>
 
-  const handleAddTask = (task: DemoTask) => {
-    setTaskList((prev) => [task, ...prev])
-  }
-
-  const handleToggle = (id: string) => {
-    setTaskList((prev) =>
-      prev.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task))
-    )
-    setSelectedTask((prev) =>
-      prev && prev.id === id ? { ...prev, completed: !prev.completed } : prev
-    )
-  }
-
-  const handleSelect = (task: DemoTask) => {
-    setSelectedTask(task)
-  }
-
-  const handleBack = () => {
-    setSelectedTask(null)
-  }
-
-  const handleDelete = (id: string) => {
-    setTaskList((prev) => prev.filter((task) => task.id !== id))
-    setSelectedTask(null)
-  }
-
-  if (selectedTask) {
-    return (
-      <TaskDetailScreen
-        task={selectedTask}
-        onBack={handleBack}
-        onToggle={handleToggle}
-        onDelete={handleDelete}
-      />
-    )
-  }
-
-  return (
-    <>
-      <Header name={name} totalTasks={taskList.length} />
-      <TaskForm onAdd={handleAddTask} />
-      {taskList.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <FlatListScreen tasks={taskList} onToggle={handleToggle} onSelect={handleSelect} />
-      )}
+      <View style={{ width: '100%', gap: 16 }}> 
+        {tasks.map((task) => {
+          return <CardTask key={task.id} task={task} />
+        })}
+      </View>
     </>
   )
 }
+
+const styles = StyleSheet.create({ 
+  gretting: {
+    width: '100%'
+  },
+  grettingText: {
+    fontSize: 24,
+    fontWeight: 'bold'
+  }
+})
 
 export default HomeScreen

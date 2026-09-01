@@ -1,24 +1,26 @@
 import { useCallback } from 'react'
 import { View, Text, FlatList, StyleSheet } from 'react-native'
-import { DemoTask } from '../types'
+import { Task } from '../types'
 import { spacing, colors } from '../theme'
 import TaskItem from '../components/TaskItem'
 import EmptyState from '../components/EmptyState'
 
 type Props = {
-  tasks: DemoTask[]
+  tasks: Task[]
   onToggle: (id: string) => void
-  onSelect: (task: DemoTask) => void
+  onSelect: (task: Task) => void
 }
 
-const keyExtractor = (item: DemoTask) => item.id
+const keyExtractor = (item: Task) => item.id
 
 const FlatListScreen = ({ tasks, onToggle, onSelect }: Props) => {
   const pending = tasks.filter((t) => !t.completed).length
 
   const renderItem = useCallback(
-    ({ item }: { item: DemoTask }) => {
-      return <TaskItem task={item} onToggle={onToggle} onPress={onSelect} />
+    ({ item }: { item: Task }) => {
+      return (
+         <TaskItem task={item} onToggle={onToggle} onPress={onSelect} />
+      )
     },
     [onToggle, onSelect]
   )

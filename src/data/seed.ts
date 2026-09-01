@@ -1,7 +1,7 @@
-import type { DemoTask } from '../types'
+import type { Task } from '../types'
 
 
-const raw: Array<[string, string, DemoTask['category'], DemoTask['date'], boolean]> = [
+const raw: Array<[string, string, Task['category'], Task['date'], boolean]> = [
   ['Sacar turno con el dentista', 'Agustín primer control', 'personal', 'today', false],
   ['Pagar la luz', 'Mes de Agosto', 'hogar', 'today', true],
   ['Bañar al perro', 'Turno viernes 13 hs.', 'personal', 'tomorrow', false],
@@ -17,7 +17,7 @@ const raw: Array<[string, string, DemoTask['category'], DemoTask['date'], boolea
   ['Ir al gimnasio', 'Rutina de piernas', 'personal', 'today', false],
   ['Renovar la SUBE', 'Cargarla antes del lunes', 'personal', 'nextWeek', false]
 ]
-export const SEED_TASKS: DemoTask[] = raw.map(([title, description, category, date, completed], i) => ({
+export const SEED_TASKS: Task[] = raw.map(([title, description, category, date, completed], i) => ({
   id: `seed-${i + 1}`,
   title,
   description,

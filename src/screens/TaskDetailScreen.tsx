@@ -1,42 +1,32 @@
 import React from 'react'
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { CATEGORIES, DUE_DATES, DemoTask } from '../types'
+import { CATEGORIES, DUE_DATES, Task } from '../types'
 import { colors, radius, shadow, spacing } from '../theme'
 
-type Props = {
-
-  task: DemoTask
-  onBack: () => void
-  onToggle: (id: string) => void
+type Props = {task: Task  
+  onBack: () => void  
+  onToggle: (id: string) => void 
   onDelete: (id: string) => void
 }
-
 export default function TaskDetailScreen({ task, onBack, onToggle, onDelete }: Props) {
   const cat = CATEGORIES[task.category]
 
   return (
     <View style={styles.container}>
-     
-      <TouchableOpacity style={styles.backButton} onPress={onBack} hitSlop={8}>
+ <TouchableOpacity style={styles.backButton} onPress={onBack} hitSlop={8}>
         <Text style={styles.backText}>‹ Volver a la lista</Text>
       </TouchableOpacity>
-
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-    
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>  
         <View style={[styles.hero, { backgroundColor: cat.soft }]}>
           <Text style={styles.heroEmoji}>{cat.emoji}</Text>
           <View style={[styles.categoryBadge, { backgroundColor: cat.color }]}>
             <Text style={styles.categoryText}>{cat.label}</Text>
           </View>
-        </View>
-
-        <Text style={[styles.title, task.completed && styles.titleCompleted]}>{task.title}</Text>
-
-      
+        </View>   
+          <Text style={[styles.title, task.completed && styles.titleCompleted]}>{task.title}</Text>
         <View style={styles.metaCard}>
           <View style={styles.metaRow}>
-            <Text style={styles.metaLabel}>Estado</Text>
-        
+            <Text style={styles.metaLabel}>Estado</Text>   
             <Text
               style={[styles.metaValue, { color: task.completed ? colors.success : colors.primary }]}
             >
@@ -59,15 +49,11 @@ export default function TaskDetailScreen({ task, onBack, onToggle, onDelete }: P
           </View>
         </View>
 
-        <Text style={styles.sectionLabel}>Descripción</Text>
-
-       
+        <Text style={styles.sectionLabel}>Descripción</Text>   
         <Text style={styles.description}>
           {task.description ||
             'Esta tarea no tiene descripción. Podés agregarla desde el formulario al crear la próxima.'}
-        </Text>
-
-       
+        </Text> 
         <TouchableOpacity
           style={[styles.action, task.completed ? styles.actionUndo : styles.actionDone]}
           onPress={() => onToggle(task.id)}
@@ -76,8 +62,7 @@ export default function TaskDetailScreen({ task, onBack, onToggle, onDelete }: P
           <Text style={styles.actionText}>
             {task.completed ? 'Marcar como pendiente' : 'Marcar como completada ✓'}
           </Text>
-        </TouchableOpacity>
-
+        </TouchableOpacity> 
         <TouchableOpacity
           style={[styles.action, styles.actionDelete]}
           onPress={() => onDelete(task.id)}
@@ -92,7 +77,6 @@ export default function TaskDetailScreen({ task, onBack, onToggle, onDelete }: P
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
     flex: 1,
     gap: spacing.lg
   },
@@ -105,8 +89,7 @@ const styles = StyleSheet.create({
     color: colors.ink
   },
   content: {
-    gap: spacing.md,
-    paddingBottom: spacing.xxl
+    gap: spacing.md, paddingBottom: spacing.xxl
   },
   hero: {
     borderRadius: radius.lg,
@@ -114,8 +97,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.xl,
     gap: spacing.sm
   },
-  heroEmoji: {
-    fontSize: 44
+  heroEmoji: { fontSize: 44
   },
   categoryBadge: {
     paddingHorizontal: spacing.md,
@@ -133,7 +115,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '800',
     color: colors.ink,
-    marginTop: spacing.xs
+    marginTop: spacing.xs  
   },
   titleCompleted: {
     textDecorationLine: 'line-through',
@@ -147,13 +129,11 @@ const styles = StyleSheet.create({
   },
   metaRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between', 
-    alignItems: 'center'
+    justifyContent: 'space-between', alignItems: 'center'
   },
   metaLabel: {
     fontSize: 13,
-    color: colors.muted, 
-    fontWeight: '600'
+    color: colors.muted, fontWeight: '600'
   },
   metaValue: {
     fontSize: 14,
@@ -162,11 +142,9 @@ const styles = StyleSheet.create({
   },
   metaId: {
     fontSize: 12,
-    color: colors.muted,
-    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace'
+    color: colors.muted,fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace'
   },
-  divider: {
-    height: 1,
+  divider: { height: 1,
     backgroundColor: colors.border,
     marginVertical: spacing.sm + 2
   },
@@ -178,10 +156,8 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginTop: spacing.sm
   },
-  description: {
-    fontSize: 15,
-    lineHeight: 23, 
-    color: colors.ink
+  description: {fontSize: 15,
+    lineHeight: 23, color: colors.ink
   },
   action: {
     borderRadius: radius.md,
@@ -196,8 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dark 
   },
   actionDelete: {
-    backgroundColor: colors.dangerSoft, 
-    marginTop: 0 
+    backgroundColor: colors.dangerSoft,marginTop: 0
   },
   actionText: {
     fontSize: 15,

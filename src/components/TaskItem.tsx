@@ -1,131 +1,118 @@
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { CATEGORIES, DUE_DATES, DemoTask } from '../types'
+import React, { memo, useEffect } from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { CATEGORIES, DUE_DATES, Task } from '../types'
 import { colors, radius, shadow, spacing } from '../theme'
 
-type Props = {
-  task: DemoTask
-  onPress: (task: DemoTask) => void
-  onToggle: (id: string) => void
+type Props = { 
+  task: Task 
+  onToggle: (id: string) => void 
+  onPress: (task: Task) => void 
+  onMountChange?: () => () => void
 }
-
-export default function TaskItem({ task, onPress, onToggle }: Props) {
-  const cat = CATEGORIES[task.category]
-
-  return (
-    <Pressable
-      onPress={() => onPress(task)}
-      accessibilityRole="button"
-      accessibilityLabel={`Ver detalle de ${task.title}`}
-      style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+  const TaskItem = memo(function TaskItem({ task, onToggle, onPress, onMountChange }: Props) {
+    useEffect(() => onMountChange?.(), [onMountChange])
+  const cat = CATEGORIES[task.category]  
+  return ( 
+  <TouchableOpacity 
+    style={[styles.card, task.completed && styles.cardCompleted]} 
+    onPress={() => onPress(task)}
+      activeOpacity={0.75}
     >
-      <View style={[styles.stripe, { backgroundColor: cat.color }]} />
-
-      <View style={styles.content}>
-        <Text style={[styles.name, task.completed && styles.nameCompleted]} numberOfLines={1}>
+    <TouchableOpacity
+        style={[
+          styles.checkbox, 
+          { borderColor: cat.color }, 
+          task.completed && { backgroundColor: cat.color }
+        ]}
+        onPress={() => onToggle(task.id)} 
+        hitSlop={8} 
+    > 
+    {task.completed && <Text style={styles.checkmark}>✓</Text>}
+  </TouchableOpacity>
+    <View style={styles.body}>
+        <Text
+          style={[styles.title, task.completed && styles.titleCompleted]}
+          numberOfLines={1}
+      >
           {task.title}
         </Text>
 
-        {task.description.length > 0 && (
-          <Text style={styles.description} numberOfLines={1}>
-            {task.description}
-          </Text>
-        )}
-
-        <View style={styles.metaRow}>
+      <View style={styles.metaRow}>
           <View style={[styles.badge, { backgroundColor: cat.soft }]}>
             <Text style={[styles.badgeText, { color: cat.color }]}>
               {cat.emoji} {cat.label}
             </Text>
           </View>
           <Text style={styles.date}>{DUE_DATES[task.date]}</Text>
-        </View>
-      </View>
-
-      <TouchableOpacity
-        onPress={() => onToggle(task.id)}
-        hitSlop={8}
-        style={[styles.checkbox, task.completed && styles.checkboxDone]}
-      >
-        {task.completed && <Text style={styles.checkboxMark}>✓</Text>}
-      </TouchableOpacity>
-    </Pressable>
+      </View> 
+    </View>
+    <Text style={styles.chevron}>›</Text>
+  </TouchableOpacity>
   )
-}
+})
 
+export default TaskItem
 const styles = StyleSheet.create({
-  card: {
+  card: { 
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'center', 
+    gap: spacing.md,
     backgroundColor: colors.surface,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: spacing.md,
-    overflow: 'hidden',
+    borderRadius: radius.md,
+    padding: spacing.lg,marginBottom: spacing.sm,
     boxShadow: shadow.card
   },
-  cardPressed: {
-    backgroundColor: colors.primarySoft
+    cardCompleted: {
+      opacity: 0.55
   },
-  stripe: {
-    width: 5,
-    alignSelf: 'stretch'
+    checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: radius.pill, 
+    borderWidth: 2,
+    alignItems: 'center',
+    justifyContent: 'center' 
   },
-  content: {
+    checkmark: {
+    color: colors.surface, 
+    fontSize: 13,
+    fontWeight: '800', 
+    lineHeight: 15
+  },
+  body: { 
     flex: 1,
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg
+    gap: spacing.xs
   },
-  name: {
-    fontSize: 16,
+    title: {
+    fontSize: 15,
     fontWeight: '700',
     color: colors.ink
   },
-  nameCompleted: {
-    textDecorationLine: 'line-through',
+    titleCompleted: {
+    textDecorationLine: 'line-through', 
     color: colors.muted
   },
-  description: {
-    fontSize: 13,
-    color: colors.muted,
-    marginTop: 2
-  },
-  metaRow: {
+    metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: spacing.sm,
-    gap: spacing.sm
+    gap: spacing.sm 
   },
-  badge: {
-    paddingHorizontal: spacing.sm + 2,
-    paddingVertical: 3,
+    badge: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 2,
     borderRadius: radius.pill
   },
-  badgeText: {
+    badgeText: {
     fontSize: 11,
     fontWeight: '700'
   },
-  date: {
+    date: {
     fontSize: 12,
     color: colors.muted
   },
-  checkbox: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    borderWidth: 2,
-    borderColor: colors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: spacing.lg
-  },
-  checkboxDone: {
-    backgroundColor: colors.success,
-    borderColor: colors.success
-  },
-  checkboxMark: {
-    color: colors.surface,
-    fontSize: 14,
-    fontWeight: '800'
+    chevron: {
+    fontSize: 22,
+    color: colors.muted,
+    marginTop: -2 
   }
 })

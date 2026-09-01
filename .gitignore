@@ -39,3 +39,8 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+cd ruta/al/taskflow
+git checkout preentrega4
+echo ".claude/" >> .gitignore
+./claude

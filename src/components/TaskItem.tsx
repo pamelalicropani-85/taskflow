@@ -1,10 +1,10 @@
 import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { CATEGORIES, DUE_DATES, Task } from '../types'
+import { CATEGORIES, DUE_DATES, DemoTask } from '../types'
 import { colors, radius, shadow, spacing } from '../theme'
 
 type Props = {
-  task: Task
-  onPress: (task: Task) => void
+  task: DemoTask
+  onPress: (task: DemoTask) => void
   onToggle: (id: string) => void
 }
 

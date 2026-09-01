@@ -1,11 +1,11 @@
 import React from 'react'
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { CATEGORIES, DUE_DATES, Task } from '../types'
+import { CATEGORIES, DUE_DATES, DemoTask } from '../types'
 import { colors, radius, shadow, spacing } from '../theme'
 
 type Props = {
- 
-  task: Task
+
+  task: DemoTask
   onBack: () => void
   onToggle: (id: string) => void
   onDelete: (id: string) => void
@@ -92,6 +92,7 @@ export default function TaskDetailScreen({ task, onBack, onToggle, onDelete }: P
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     flex: 1,
     gap: spacing.lg
   },
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: 16,
     fontWeight: '700',
-    color: colors.primary
+    color: colors.ink
   },
   content: {
     gap: spacing.md,

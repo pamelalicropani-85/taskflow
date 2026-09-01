@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { CATEGORIES, DUE_DATES, Task } from '../types'
+import { CATEGORIES, DUE_DATES, DemoTask } from '../types'
 import { colors, radius, shadow, spacing } from '../theme'
 
 type Props = {
-  task: Task
+  task: DemoTask
 }
 
 export default function LastTaskCard({ task }: Props) {

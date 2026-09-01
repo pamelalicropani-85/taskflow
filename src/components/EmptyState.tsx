@@ -13,10 +13,8 @@ export default function EmptyState() {
 
 const styles = StyleSheet.create({
   container: {
-
+    width: '100%',
     alignItems: 'center',
-
-  
     paddingVertical: spacing.xxl * 2,
     paddingHorizontal: spacing.xl,
     gap: spacing.sm

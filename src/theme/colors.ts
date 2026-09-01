@@ -11,9 +11,18 @@ export const colors ={
 
     success: '#6cd76cff',
     danger: '#ed28b2cb',
-    
+    dangerSoft: '#fce4f5ff',
+
+    ink: '#2b2b2bff',
+    muted: '#8a8a8aff',
+
+    border: '#e2d6c8ff',
+    canvas: '#fffaf6ff',
+    primarySoft: '#f7e4d1ff',
+    dark: '#4a3b32ff',
+
     cardBackgroundColor: '#ffffffff',
-    
+
     category: '#efdecdff',
     categorySelected: '#eda8a8ff'
 }

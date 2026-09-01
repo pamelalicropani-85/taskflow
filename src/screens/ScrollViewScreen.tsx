@@ -1,14 +1,14 @@
 import React from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { Task } from '../types'
+import { DemoTask } from '../types'
 import { colors, radius, spacing } from '../theme'
 import TaskItem from '../components/TaskItem'
 import EmptyState from '../components/EmptyState'
 
 type Props = {
-  tasks: Task[]
+  tasks: DemoTask[]
   onToggle: (id: string) => void
-  onSelect: (task: Task) => void
+  onSelect: (task: DemoTask) => void
 }
 
 export default function ScrollViewScreen({ tasks, onToggle, onSelect }: Props) {

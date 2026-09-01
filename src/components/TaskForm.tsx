@@ -1,10 +1,10 @@
 import { useState } from 'react'
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import { CATEGORIES, Category, Task, createId } from '../types'
+import { CATEGORIES, Category, DemoTask, createId } from '../types'
 import { colors, radius, shadow, spacing } from '../theme'
 
 type Props = {
-  onAdd: (task: Task) => void
+  onAdd: (task: DemoTask) => void
 }
 
 const categoryKeys = Object.keys(CATEGORIES) as Category[]
@@ -114,6 +114,7 @@ export default function TaskForm({ onAdd }: Props) {
 
 const styles = StyleSheet.create({
   card: {
+    width: '100%',
     backgroundColor: colors.surface,
     borderRadius: radius.lg,
     padding: spacing.lg,

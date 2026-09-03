@@ -5,24 +5,34 @@ import { spacing, colors, radius, shadow, screenStyles } from '../../theme'
 import TaskItem from '../../components/TaskItem'
 import EmptyState from '../../components/EmptyState'
 
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../navigation/types'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { selectAllTasks, selectFilteredTasks, selectTaskFilter, setFilter, TaskFilter, toggleTaskStatus } from '../../store/tasksSlice'
 
-type NavigationProp = NativeStackNavigationProp<
-RootStackParamList,
-'TaskList'
->
-
-type Props = {
-  navigation: NavigationProp
-  tasks: Task[]
-  onToggle: (id: string) => void
-}
+type Props = NativeStackScreenProps<RootStackParamList, 'TaskList'>
 
 const keyExtractor = (item: Task) => item.id
 
-const TasksScreen = ({ navigation, tasks, onToggle }: Props) => {
-  const pending = tasks.filter((t) => !t.completed).length
+const FILTERS: Array<{ key: TaskFilter; label: string }> = [
+  { key: 'all', label: 'Todas' },
+  { key: 'pending', label: 'Pendientes' },
+  { key: 'completed', label: 'Completadas' }
+]
+
+const TasksScreen = ({ navigation }: Props) => {
+  const dispatch = useAppDispatch()
+  const tasks = useAppSelector(selectFilteredTasks)
+  const allTasks = useAppSelector(selectAllTasks)
+  const filter = useAppSelector(selectTaskFilter)
+  const pending = allTasks.filter((t) => !t.completed).length
+
+  const onToggle = useCallback(
+    (id: string) => {
+      dispatch(toggleTaskStatus(id))
+    },
+    [dispatch]
+  )
 
   const openDetail = useCallback(
     (task: Task) => {
@@ -58,10 +68,27 @@ const TasksScreen = ({ navigation, tasks, onToggle }: Props) => {
         </View>
 
         <Text style={styles.subtitle}>
-          {pending === 0 && tasks.length > 0
+          {pending === 0 && allTasks.length > 0
             ? '¡Todo completado! 🎉'
             : 'Tocá una tarea para ver su detalle'}
         </Text>
+
+        <View style={styles.filterRow}>
+          {FILTERS.map(({ key, label }) => {
+            const active = filter === key
+            return (
+              <TouchableOpacity
+                key={key}
+                style={[styles.filterChip, active && styles.filterChipActive]}
+                onPress={() => dispatch(setFilter(key))}
+              >
+                <Text style={[styles.filterChipText, active && styles.filterChipTextActive]}>
+                  {label}
+                </Text>
+              </TouchableOpacity>
+            )
+          })}
+        </View>
       </View>
       <FlatList
         data={tasks}
@@ -120,6 +147,30 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: colors.muted
+  },
+  filterRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginTop: spacing.xs
+  },
+  filterChip: {
+    borderWidth: 1.5,
+    borderColor: colors.border,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs + 2
+  },
+  filterChipActive: {
+    backgroundColor: colors.dark,
+    borderColor: colors.dark
+  },
+  filterChipText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.ink
+  },
+  filterChipTextActive: {
+    color: colors.surface
   },
   listContent: {
 

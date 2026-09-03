@@ -1,20 +1,21 @@
 import React from 'react'
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { CATEGORIES, DUE_DATES, Task } from '../../types'
+import { CATEGORIES, DUE_DATES } from '../../types'
 import { colors, radius, shadow, spacing, screenStyles } from '../../theme'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../navigation/types'
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+import { deleteTask, selectTaskById, toggleTaskStatus } from '../../store/tasksSlice'
 
 type Props = NativeStackScreenProps<
 RootStackParamList,
 'TaskDetail'
-> & {
-  tasks: Task[]
-}
+>
 
-export default function TaskDetailScreen({ navigation, route, tasks }: Props) {
+export default function TaskDetailScreen({ navigation, route }: Props) {
   const { id } = route.params
-  const task = tasks.find((t) => t.id === id)
+  const dispatch = useAppDispatch()
+  const task = useAppSelector(selectTaskById(id))
 
   if (!task) {
     return (
@@ -72,22 +73,25 @@ export default function TaskDetailScreen({ navigation, route, tasks }: Props) {
           {task.description ||
             'Esta tarea no tiene descripción. Podés agregarla desde el formulario al crear la próxima.'}
         </Text> 
-        {/*<TouchableOpacity
+        <TouchableOpacity
           style={[styles.action, task.completed ? styles.actionUndo : styles.actionDone]}
-          onPress={() => onToggle(task.id)}
+          onPress={() => dispatch(toggleTaskStatus(task.id))}
           activeOpacity={0.85}
         >
           <Text style={styles.actionText}>
             {task.completed ? 'Marcar como pendiente' : 'Marcar como completada ✓'}
           </Text>
-        </TouchableOpacity> 
+        </TouchableOpacity>
         <TouchableOpacity
           style={[styles.action, styles.actionDelete]}
-          onPress={() => onDelete(task.id)}
+          onPress={() => {
+            dispatch(deleteTask(task.id))
+            navigation.goBack()
+          }}
           activeOpacity={0.85}
         >
           <Text style={[styles.actionText, { color: colors.danger }]}>Eliminar tarea</Text>
-        </TouchableOpacity>*/}
+        </TouchableOpacity>
       </View>
     </View>
     

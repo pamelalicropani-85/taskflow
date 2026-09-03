@@ -12,17 +12,18 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../navigation/types'
-import { CATEGORIES, Category, createId, DueDate, DUE_DATES, Task } from '../../types'
+import { CATEGORIES, Category, DueDate, DUE_DATES } from '../../types'
 import { colors, radius, spacing } from '../../theme'
+import { useAppDispatch } from '../../store/hooks'
+import { addTask } from '../../store/tasksSlice'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'TaskForm'> & {
-  onAdd: (task: Task) => void
-}
+type Props = NativeStackScreenProps<RootStackParamList, 'TaskForm'>
 
 const CATEGORY_KEYS = Object.keys(CATEGORIES) as Category[]
 const DATE_KEYS = Object.keys(DUE_DATES) as DueDate[]
 
-export default function TaskFormScreen({ navigation, onAdd }: Props) {
+export default function TaskFormScreen({ navigation }: Props) {
+  const dispatch = useAppDispatch()
   const insets = useSafeAreaInsets()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -32,14 +33,12 @@ export default function TaskFormScreen({ navigation, onAdd }: Props) {
 
   const handleSubmit = () => {
     if (!canSubmit) return
-    onAdd({
-      id: createId(),
+    dispatch(addTask({
       title: title.trim(),
       description: description.trim(),
       category,
-      date,
-      completed: false
-    })
+      date
+    }))
     navigation.navigate('TaskList')
   }
 

@@ -1,22 +1,40 @@
 import React from 'react'
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { CATEGORIES, DUE_DATES, Task } from '../types'
-import { colors, radius, shadow, spacing } from '../theme'
+import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { CATEGORIES, DUE_DATES, Task } from '../../types'
+import { colors, radius, shadow, spacing, screenStyles } from '../../theme'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../../navigation/types'
 
-type Props = {task: Task  
-  onBack: () => void  
-  onToggle: (id: string) => void 
-  onDelete: (id: string) => void
+type Props = NativeStackScreenProps<
+RootStackParamList,
+'TaskDetail'
+> & {
+  tasks: Task[]
 }
-export default function TaskDetailScreen({ task, onBack, onToggle, onDelete }: Props) {
+
+export default function TaskDetailScreen({ navigation, route, tasks }: Props) {
+  const { id } = route.params
+  const task = tasks.find((t) => t.id === id)
+
+  if (!task) {
+    return (
+      <View style={screenStyles.container}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} hitSlop={8}>
+          <Text style={styles.backText}>‹ Volver a la lista</Text>
+        </TouchableOpacity>
+        <Text style={styles.description}>No se encontró la tarea.</Text>
+      </View>
+    )
+  }
+
   const cat = CATEGORIES[task.category]
 
-  return (
-    <View style={styles.container}>
- <TouchableOpacity style={styles.backButton} onPress={onBack} hitSlop={8}>
+  return ( 
+    <View style={screenStyles.container}>
+ <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()} hitSlop={8}>
         <Text style={styles.backText}>‹ Volver a la lista</Text>
       </TouchableOpacity>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>  
+      <View style={styles.content}>
         <View style={[styles.hero, { backgroundColor: cat.soft }]}>
           <Text style={styles.heroEmoji}>{cat.emoji}</Text>
           <View style={[styles.categoryBadge, { backgroundColor: cat.color }]}>
@@ -54,7 +72,7 @@ export default function TaskDetailScreen({ task, onBack, onToggle, onDelete }: P
           {task.description ||
             'Esta tarea no tiene descripción. Podés agregarla desde el formulario al crear la próxima.'}
         </Text> 
-        <TouchableOpacity
+        {/*<TouchableOpacity
           style={[styles.action, task.completed ? styles.actionUndo : styles.actionDone]}
           onPress={() => onToggle(task.id)}
           activeOpacity={0.85}
@@ -69,86 +87,91 @@ export default function TaskDetailScreen({ task, onBack, onToggle, onDelete }: P
           activeOpacity={0.85}
         >
           <Text style={[styles.actionText, { color: colors.danger }]}>Eliminar tarea</Text>
-        </TouchableOpacity>
-      </ScrollView>
+        </TouchableOpacity>*/}
+      </View>
     </View>
+    
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
+    container: {
     flex: 1,
     gap: spacing.lg
   },
-  backButton: {
+    backButton: {
     alignSelf: 'flex-start'
   },
-  backText: {
+    backText: {
     fontSize: 16,
     fontWeight: '700',
     color: colors.ink
   },
-  content: {
-    gap: spacing.md, paddingBottom: spacing.xxl
+    content: {
+    gap: spacing.md, 
+    paddingBottom: spacing.xxl
   },
-  hero: {
+    hero: {
     borderRadius: radius.lg,
     alignItems: 'center',
     paddingVertical: spacing.xl,
     gap: spacing.sm
   },
-  heroEmoji: { fontSize: 44
+    heroEmoji: { 
+    fontSize: 44
   },
-  categoryBadge: {
+    categoryBadge: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,
     borderRadius: radius.pill
   },
-  categoryText: {
+    categoryText: {
     color: colors.surface,
     fontSize: 12,
     fontWeight: '800',
     textTransform: 'uppercase',
     letterSpacing: 0.5
   },
-  title: {
+    title: {
     fontSize: 24,
     fontWeight: '800',
     color: colors.ink,
     marginTop: spacing.xs  
   },
-  titleCompleted: {
+    titleCompleted: {
     textDecorationLine: 'line-through',
     color: colors.muted
   },
-  metaCard: {
+    metaCard: {
     backgroundColor: colors.surface,
     borderRadius: radius.md,
     padding: spacing.lg,
     boxShadow: shadow.card
   },
-  metaRow: {
+    metaRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between', alignItems: 'center'
+    justifyContent: 'space-between', 
+    alignItems: 'center'
   },
-  metaLabel: {
+    metaLabel: {
     fontSize: 13,
     color: colors.muted, fontWeight: '600'
   },
-  metaValue: {
+    metaValue: {
     fontSize: 14,
     fontWeight: '700',
     color: colors.ink 
   },
-  metaId: {
+    metaId: {
     fontSize: 12,
-    color: colors.muted,fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace'
+    color: colors.muted,
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace'
   },
-  divider: { height: 1,
+    divider: { height: 1,
     backgroundColor: colors.border,
     marginVertical: spacing.sm + 2
   },
-  sectionLabel: {
+    sectionLabel: {
     fontSize: 12,
     fontWeight: '800',
     color: colors.muted,
@@ -156,25 +179,26 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginTop: spacing.sm
   },
-  description: {fontSize: 15,
+    description: {
+    fontSize: 15,
     lineHeight: 23, color: colors.ink
   },
-  action: {
+    action: {
     borderRadius: radius.md,
     paddingVertical: spacing.md + 2,
     alignItems: 'center',
     marginTop: spacing.sm
   },
-  actionDone: {
+    actionDone: {
     backgroundColor: colors.success 
   },
-  actionUndo: {
+    actionUndo: {
     backgroundColor: colors.dark 
   },
-  actionDelete: {
+    actionDelete: {
     backgroundColor: colors.dangerSoft,marginTop: 0
   },
-  actionText: {
+    actionText: {
     fontSize: 15,
     fontWeight: '800',
     color: colors.surface

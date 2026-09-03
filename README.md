@@ -1,39 +1,45 @@
 # TaskFlow
 
-App de gestión de tareas hecha con Expo (React Native).
+# Taskflow
 
-## Últimos cambios
+Aplicación móvil desarrollada con **React Native**, **Expo** y **React Navigation** para gestionar tareas.
 
-### Pantalla principal: formulario de creación de tareas
-`HomeScreen` pasó de ser una pantalla estática a un formulario funcional:
+## 📱 Funcionalidades
 
-- Estado para `título`, `descripción` y `categoría` de la nueva tarea.
-- Selector de categoría (`Trabajo`, `Estudio`, `Hogar`) con botones tipo chip.
-- Validación en tiempo real:
-  - El título debe tener al menos 3 caracteres.
-  - La descripción debe tener al menos 10 caracteres.
-  - Mensajes de error debajo de cada campo cuando no se cumplen.
-- Botón "Agregar tarea" deshabilitado hasta que el título sea válido.
-- Al agregar, se muestra un `Alert` de confirmación y la tarea se suma a la lista en memoria (`taskList`).
-- El `Header` ahora recibe la cantidad total de tareas (`totalTasks`) en lugar de mostrarla de forma estática.
+* Visualización de una lista de tareas.
+* Consulta del detalle de cada tarea.
+* Creación de nuevas tareas.
+* Navegación entre las diferentes pantallas.
 
-### Navegación / entrada de la app
-- `App.tsx` ahora renderiza `HomeScreen` en vez de `ProfileScreen`.
-- Se eliminó `src/screens/ProfileScreen.tsx` (ya no se usa).
+## 🧭 Navegación
 
-### Tema (`src/theme/colors.ts`)
-Se amplió la paleta de colores para soportar el nuevo formulario:
+La aplicación utiliza un `BottomTabNavigator` con las siguientes rutas:
 
-- Nuevos tokens: `surface`, `primary`, `secondary`, `text`, `textSecondary`, `success`, `danger`, `category`, `categorySelected`.
+* **Home**
+* **Profile**
 
-### Tipos (`src/types/index.ts`)
-- Se agregó el campo `category: string` al tipo `Task`.
+Dentro de **Home** se utiliza un `NativeStackNavigator`:
 
-## Cómo correr el proyecto
+```text id="h7k2m9"
+Home
+├── TaskList
+├── TaskDetail
+└── TaskForm
+```
 
-```bash
+Al seleccionar una tarea, se navega a `TaskDetail` enviando el ID correspondiente. Después de guardar una nueva tarea, la aplicación regresa a `TaskList`.
+
+## 🛠️ Tecnologías utilizadas
+
+* React Native
+* Expo
+* React Navigation
+* Native Stack Navigator
+* Bottom Tab Navigator
+
+## 🚀 Instalación
+
+```bash id="p4w8x2"
 npm install
 npx expo start
 ```
-
-Luego presioná `a` (Android) o `i` (iOS) para abrir la app en un emulador, o escaneá el QR con Expo Go en un dispositivo físico.

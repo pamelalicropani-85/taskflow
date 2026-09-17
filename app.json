@@ -13,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pamela85steam.taskflow",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,7 +25,11 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.pamela85steam.taskflow"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,6 +41,18 @@
           "photosPermission": "TaskFlow accede a tus fotos para que elijas tu imagen de perfil."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "32f85708-f64d-41e6-9274-d73a701db744"
+      }
+    },
+    "owner": "pamela85s-team",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/32f85708-f64d-41e6-9274-d73a701db744"
+    }
   }
 }

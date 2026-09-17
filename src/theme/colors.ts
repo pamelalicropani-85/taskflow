@@ -1,30 +1,30 @@
 export const colors ={
-    backgroundColor: '#eabb8dff',
+    backgroundColor: '#F8F7FC',
 
-    surface: '#f5f5f5ff',   
+    surface: '#FFFFFFff',
 
-    primary: '#eabb8dff',
+    primary: '#6D5BD0ff',
 
-    text: '#000000ff',
-    textSecondary: '#666666ff',
+    text: '#241F33ff',
+    textSecondary: '#766F8Aff',
 
-    
-    danger: '#ed28b2cb',
-    dangerSoft: '#fce4f5ff',
 
-    ink: '#2b2b2bff',
-    muted: '#8a8a8aff',
+    danger: '#EF4444ff',
+    dangerSoft: '#FDE8E8ff',
 
-    border: '#e2d6c8ff',
-    canvas: '#fffaf6ff',
-    primarySoft: '#f7e4d1ff',
-    dark: '#4a3b32ff',
+    ink: '#241F33ff',
+    muted: '#766F8Aff',
 
-    cardBackgroundColor: '#ffffffff',
+    border: '#E6E1F5ff',
+    canvas: '#F8F7FCff',
+    primarySoft: '#E7E3FBff',
+    dark: '#2A2140ff',
 
-    category: '#efdecdff',
-    categorySelected: '#eda8a8ff',
+    cardBackgroundColor: '#FFFFFFff',
 
-    successSoft: '#b14b99ff',
-    success: '#6cd76cff',
+    category: '#EDEAFBff',
+    categorySelected: '#C9BFF2ff',
+
+    successSoft: '#DFF5EAff',
+    success: '#35B37Eff',
 }as const

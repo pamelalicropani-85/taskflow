@@ -1,137 +1,185 @@
-import { useCallback } from 'react'
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native'
+import { useCallback, useEffect } from 'react'
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native'
+
 import { Task } from '../../types'
-import { spacing, colors, radius, shadow, screenStyles } from '../../theme'
+import { spacing, colors, screenStyles } from '../../theme'
+
 import TaskItem from '../../components/TaskItem'
 import EmptyState from '../../components/EmptyState'
+import FilterBar from '../../components/FilterBar'
+import TaskForm from '../../components/TaskForm'
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { RootStackParamList } from '../../navigation/types'
-import { useAppDispatch, useAppSelector } from '../../store/hooks'
-import { selectAllTasks, selectFilteredTasks, selectTaskFilter, setFilter, TaskFilter, toggleTaskStatus } from '../../store/tasksSlice'
+import { TaskStackParamList } from '../../navigation/types'
 
-type Props = NativeStackScreenProps<RootStackParamList, 'TaskList'>
+import { useAppDispatch, useAppSelector } from '../../store/hooks'
+
+import fallbackAvatar from '../../assets/images.webp' 
+
+import {
+  selectFilter,
+  selectTaskStats,
+  selectVisibleTasks,
+  setTasks
+} from '../../features/tasks/tasksSlice'
+
+import { selectCurrentUser } from '../../features/auth/authSlice'
+
+import {
+  subscribeToTasks,
+  updateTaskStatus
+} from '../../services/tasks/tasksService'
+
+type Props = NativeStackScreenProps<TaskStackParamList, 'Tasks'>
 
 const keyExtractor = (item: Task) => item.id
 
-const FILTERS: Array<{ key: TaskFilter; label: string }> = [
-  { key: 'all', label: 'Todas' },
-  { key: 'pending', label: 'Pendientes' },
-  { key: 'completed', label: 'Completadas' }
-]
-
 const TasksScreen = ({ navigation }: Props) => {
   const dispatch = useAppDispatch()
-  const tasks = useAppSelector(selectFilteredTasks)
-  const allTasks = useAppSelector(selectAllTasks)
-  const filter = useAppSelector(selectTaskFilter)
-  const pending = allTasks.filter((t) => !t.completed).length
 
-  const onToggle = useCallback(
-    (id: string) => {
-      dispatch(toggleTaskStatus(id))
+  const user = useAppSelector(selectCurrentUser)
+
+  const tasks = useAppSelector(selectVisibleTasks)
+  const filter = useAppSelector(selectFilter)
+  const { pending, total } = useAppSelector(selectTaskStats)
+
+  useEffect(() => {
+    if (!user) return
+
+    const unsubscribe = subscribeToTasks(
+      user.uid,
+      (tasks) => {
+        dispatch(setTasks(tasks))
+      }
+    )
+
+    return unsubscribe
+  }, [user, dispatch])
+
+  const toggleTask = useCallback(
+    async (id: string) => {
+      const task = tasks.find((task) => task.id === id)
+
+      if (!task) return
+
+      try {
+        await updateTaskStatus(
+          task.id,
+          !task.completed
+        )
+      } catch (error) {
+        console.error(
+          'Error al actualizar tarea:',
+          error
+        )
+      }
     },
-    [dispatch]
+    [tasks]
   )
 
   const openDetail = useCallback(
     (task: Task) => {
-    navigation.navigate('TaskDetail', { id: task.id });
-  },
-  [navigation]);
-
-  const openForm = useCallback(() => {
-    navigation.navigate('TaskForm')
-  }, [navigation])
+      navigation.navigate('TaskDetail', {
+        taskId: task.id
+      })
+    },
+    [navigation]
+  )
 
   const renderItem = useCallback(
     ({ item }: { item: Task }) => {
       return (
-         <TaskItem task={item} onToggle={onToggle} onPress={openDetail} />
+        <TaskItem
+          task={item}
+          onToggle={toggleTask}
+          onPress={openDetail}
+        />
       )
     },
-    [onToggle, openDetail]
+    [toggleTask, openDetail]
   )
 
   return (
     <View style={screenStyles.container}>
       <View style={styles.header}>
+        <View style={styles.brandRow}>
         <View>
           <Text style={styles.brand}>TaskFlow</Text>
-          <Text style={styles.appSubtitle}>Listas, formulario y detalle</Text>
+
+          <Text style={styles.appSubtitle}>{user?.email ?? "Organiza tu día"}</Text>
+        </View>
+        <TouchableOpacity onPress= {() =>{
+          navigation.getParent()?.navigate('ProfileStack')
+        }}>
+        <Image
+        source={user?.photoURL ? {uri: user.photoURL} : fallbackAvatar}
+        style={styles.headerAvatar}
+        />
+        </TouchableOpacity>
         </View>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>Mis tareas</Text>
+          <Text style={styles.title}>
+            Mis tareas
+          </Text>
+
           <View style={styles.counter}>
-            <Text style={styles.counterText}>{pending}</Text>
+            <Text style={styles.counterText}>
+              {pending}
+            </Text>
           </View>
         </View>
 
         <Text style={styles.subtitle}>
-          {pending === 0 && allTasks.length > 0
+          {pending === 0 && total > 0
             ? '¡Todo completado! 🎉'
             : 'Tocá una tarea para ver su detalle'}
         </Text>
 
-        <View style={styles.filterRow}>
-          {FILTERS.map(({ key, label }) => {
-            const active = filter === key
-            return (
-              <TouchableOpacity
-                key={key}
-                style={[styles.filterChip, active && styles.filterChipActive]}
-                onPress={() => dispatch(setFilter(key))}
-              >
-                <Text style={[styles.filterChipText, active && styles.filterChipTextActive]}>
-                  {label}
-                </Text>
-              </TouchableOpacity>
-            )
-          })}
-        </View>
+        <FilterBar />
       </View>
+
       <FlatList
         data={tasks}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
-        ListEmptyComponent={<EmptyState />}
-
+        ListEmptyComponent={
+          <EmptyState filter={filter} />
+        }
         initialNumToRender={8}
         windowSize={7}
         maxToRenderPerBatch={8}
       />
 
-      <TouchableOpacity style={styles.fabRow} onPress={openForm} activeOpacity={0.8}>
-        <Text style={styles.fabPlus}>+</Text>
-        <Text style={styles.fabText}>Nueva tarea</Text>
-      </TouchableOpacity>
+      <TaskForm />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
     flex: 1,
     gap: spacing.lg
   },
+
   header: {
     gap: spacing.sm
   },
+
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: spacing.md
   },
+
   title: {
     fontSize: 26,
     fontWeight: '800',
     color: colors.ink
   },
+
   counter: {
     backgroundColor: colors.primarySoft,
-
     minWidth: 32,
     height: 32,
     borderRadius: 16,
@@ -139,76 +187,44 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: spacing.sm
   },
+
   counterText: {
     color: colors.primary,
     fontWeight: '800',
     fontSize: 15
   },
+  brandRow:{
+    flexDirection: 'row',
+    alignItems:'center',
+    justifyContent: 'space-between'
+  },
+  headerAvatar:{
+    width:40,
+    height:40,
+    borderRadius:20
+  },
   subtitle: {
     fontSize: 14,
     color: colors.muted
   },
-  filterRow: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    marginTop: spacing.xs
-  },
-  filterChip: {
-    borderWidth: 1.5,
-    borderColor: colors.border,
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs + 2
-  },
-  filterChipActive: {
-    backgroundColor: colors.dark,
-    borderColor: colors.dark
-  },
-  filterChipText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: colors.ink
-  },
-  filterChipTextActive: {
-    color: colors.surface
-  },
-  listContent: {
 
+  listContent: {
     paddingBottom: spacing.xl,
     flexGrow: 1
   },
+
   brand: {
     fontSize: 24,
-    fontWeight: "900",
+    fontWeight: '900',
     color: colors.ink,
-    letterSpacing: -0.5,
+    letterSpacing: -0.5
   },
 
   appSubtitle: {
     fontSize: 14,
     color: colors.muted,
-    marginTop: spacing.xs,
-  },
-  fabRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: spacing.sm,
-    backgroundColor: colors.primary,
-    borderRadius: radius.lg,
-    paddingVertical: spacing.md + 2,
-    boxShadow: shadow.raised
-  },
-  fabPlus: {
-    color: colors.surface,
-    fontSize: 18,
-    fontWeight: '800'
-  },
-  fabText: {
-    color: colors.surface,
-    fontSize: 15,
-    fontWeight: '800'
-  },
+    marginTop: spacing.xs
+  }
 })
 
 export default TasksScreen

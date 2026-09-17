@@ -4,5 +4,5 @@ export const shadows ={
 
 export const shadow = {
     card: shadows.cardShadow,
-    raised: '0px 8px 20px rgba(42, 16, 8, 0.28)'
+    raised: '0px 8px 20px rgba(36, 31, 51, 0.28)'
 }as const

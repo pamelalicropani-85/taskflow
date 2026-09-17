@@ -64,3 +64,9 @@ npx expo start
 
 https://expo.dev/accounts/pamela85s-team/projects/taskflow
 
+## Emulador
+
+https://github.com/user-attachments/assets/30cbfde6-d81b-4807-a528-d65c6efa11a1
+
+
+

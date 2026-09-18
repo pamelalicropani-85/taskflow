@@ -84,7 +84,8 @@ https://expo.dev/accounts/pamela85/projects/taskflow
 ## 📦 Publicación
 
 * **EAS Update** (versión funcional publicada, canal `production`): https://expo.dev/accounts/pamela85/projects/taskflow/updates/19a89803-797c-4685-9def-31e4fd10bc3e
-* **EAS Build** (APK, perfil `preview`): https://expo.dev/accounts/pamela85/projects/taskflow/builds/7b9753a1-9768-4258-9543-adb527dc2651
+* **EAS Build** (APK instalable, perfil `preview`): https://expo.dev/accounts/pamela85/projects/taskflow/builds/7b9753a1-9768-4258-9543-adb527dc2651
+  * Descarga directa del `.apk`: https://expo.dev/artifacts/eas/4V6cvWm3x6nn_s8xlZh9ldbix1V8c5V6nBytkT21ZPU.apk
 
 ## Emulador
 

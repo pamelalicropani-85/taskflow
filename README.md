@@ -60,6 +60,10 @@ Al seleccionar una tarea, se navega a `TaskDetail` enviando el ID correspondient
 npm install
 npx expo start
 ```
+## 🔗 Repositorio
+
+https://github.com/pamelalicropani-85/taskflow
+
 ## URL Expo 
 
 https://expo.dev/accounts/pamela85s-team/projects/taskflow

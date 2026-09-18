@@ -1,58 +1,71 @@
 # TaskFlow
 
-# Taskflow
-
-Aplicación móvil desarrollada con **React Native**, **Expo**, **React Navigation** y **Redux Toolkit** para gestionar tareas.
+Aplicación móvil desarrollada con **React Native**, **Expo**, **React Navigation**, **Redux Toolkit** y **Firebase** (Auth + Firestore) para gestionar tareas.
 
 ## 📱 Funcionalidades
 
-* Visualización de una lista de tareas.
+* Registro e inicio de sesión con **Firebase Authentication** (email/contraseña).
+* Visualización de una lista de tareas sincronizada en tiempo real con **Firestore**.
 * Filtrado global de tareas (Todas / Pendientes / Completadas), persistente entre pestañas.
 * Consulta del detalle de cada tarea.
 * Creación de nuevas tareas.
 * Marcar una tarea como completada/pendiente y eliminarla desde el detalle.
-* Navegación entre las diferentes pantallas.
+* Perfil de usuario con selección y actualización de foto desde la galería (**expo-image-picker**), persistida en Firestore.
+* Cierre de sesión.
+* Navegación entre las diferentes pantallas, condicionada al estado de autenticación.
 
 ## 🗃️ Estado global (Redux Toolkit)
 
-El estado de las tareas vive en un store centralizado con **Redux Toolkit**, en vez de estado local por pantalla:
+El estado vive en un store centralizado con **Redux Toolkit**, organizado por features:
 
 ```text id="r3d5x1"
 src/store
-├── store.ts       # configureStore
-├── hooks.ts       # useAppDispatch / useAppSelector tipados
-└── tasksSlice.ts  # createSlice "tasks"
+├── index.ts        # configureStore
+└── hooks.ts         # useAppDispatch / useAppSelector tipados
+
+src/features
+├── auth/authSlice.ts   # createSlice "auth": usuario actual y estado de carga
+└── tasks/tasksSlice.ts # createSlice "tasks": { items, filter }
 ```
 
-El slice `tasks` mantiene `{ items, filter }` y expone las acciones `addTask`, `toggleTaskStatus`, `deleteTask` y `setFilter`. Las pantallas de lista, detalle y formulario se conectan al store con `useSelector`/`useDispatch` en lugar de recibir props o manejar `useState` propio.
+El slice `auth` mantiene `{ user, isLoading }`, sincronizado con `onAuthStateChanged` de Firebase. El slice `tasks` mantiene `{ items, filter }` y expone las acciones `addTask`, `toggleTaskStatus`, `deleteTask`, `setTasks` y `setFilter`. Las pantallas se conectan al store con `useAppSelector`/`useAppDispatch` en lugar de recibir props o manejar `useState` propio.
+
+## ☁️ Firebase
+
+`src/config/firebase.ts` inicializa la app de Firebase. Los servicios están separados por dominio:
+
+* `services/auth/authService.ts` — `createAccount`, `signIn`, `logout` (Firebase Auth).
+* `services/tasks/tasksService.ts` — `createTask`, `subscribeToTasks` (suscripción en tiempo real), actualización y borrado en Firestore, filtradas por `userId`.
+* `services/profile/profileService.ts` — `getUserProfile`, `updateUserPhoto` para la foto de perfil en Firestore.
 
 ## 🧭 Navegación
 
-La aplicación utiliza un `BottomTabNavigator` con las siguientes rutas:
-
-* **Home**
-* **Profile**
-
-Dentro de **Home** se utiliza un `NativeStackNavigator`:
+La navegación raíz (`RootNavigator`) muestra `AuthStack` o `TabNavigator` según haya o no un usuario autenticado:
 
 ```text id="h7k2m9"
-Home
-├── TaskList
-├── TaskDetail
-└── TaskForm
+RootNavigator
+├── AuthStack (sin sesión)
+│   ├── Login
+│   └── Register
+└── TabNavigator (con sesión)
+    ├── TasksStack
+    │   ├── Tasks       # lista + formulario de creación
+    │   └── TaskDetail
+    └── ProfileStack
+        └── Profile
 ```
 
-Al seleccionar una tarea, se navega a `TaskDetail` enviando el ID correspondiente. Después de guardar una nueva tarea, la aplicación regresa a `TaskList`.
+Al seleccionar una tarea, se navega a `TaskDetail` enviando el ID correspondiente.
 
 ## 🛠️ Tecnologías utilizadas
 
 * React Native
 * Expo
-* React Navigation
-* Native Stack Navigator
-* Bottom Tab Navigator
-* Redux Toolkit (`@reduxjs/toolkit`)
-* React Redux (`react-redux`)
+* React Navigation (Native Stack + Bottom Tabs)
+* Redux Toolkit (`@reduxjs/toolkit`) y React Redux (`react-redux`)
+* Firebase (`firebase`, `@firebase/auth`) — Authentication y Firestore
+* Expo Image Picker (`expo-image-picker`)
+* Async Storage (`@react-native-async-storage/async-storage`)
 
 ## 🚀 Instalación
 
@@ -66,7 +79,12 @@ https://github.com/pamelalicropani-85/taskflow
 
 ## URL Expo 
 
-https://expo.dev/accounts/pamela85s-team/projects/taskflow
+https://expo.dev/accounts/pamela85/projects/taskflow
+
+## 📦 Publicación
+
+* **EAS Update** (versión funcional publicada, canal `production`): https://expo.dev/accounts/pamela85/projects/taskflow/updates/19a89803-797c-4685-9def-31e4fd10bc3e
+* **EAS Build** (APK, perfil `preview`): https://expo.dev/accounts/pamela85/projects/taskflow/builds/7b9753a1-9768-4258-9543-adb527dc2651
 
 ## Emulador
 

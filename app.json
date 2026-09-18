@@ -42,17 +42,17 @@
         }
       ]
     ],
-    "extra": {
-      "eas": {
-        "projectId": "32f85708-f64d-41e6-9274-d73a701db744"
-      }
-    },
-    "owner": "pamela85s-team",
     "runtimeVersion": {
       "policy": "appVersion"
     },
+    "extra": {
+      "eas": {
+        "projectId": "1e88a2cc-83d1-47f3-9410-c504a88b7e54"
+      }
+    },
+    "owner": "pamela85",
     "updates": {
-      "url": "https://u.expo.dev/32f85708-f64d-41e6-9274-d73a701db744"
+      "url": "https://u.expo.dev/1e88a2cc-83d1-47f3-9410-c504a88b7e54"
     }
   }
 }

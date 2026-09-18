@@ -77,15 +77,17 @@ npx expo start
 
 https://github.com/pamelalicropani-85/taskflow
 
+## 📦 Publicación (versión funcional)
+
+* **APK instalable (descarga directa, sin necesidad de cuenta de Expo)**: https://expo.dev/artifacts/eas/4V6cvWm3x6nn_s8xlZh9ldbix1V8c5V6nBytkT21ZPU.apk
+* **Página del build** (logs y detalle, también accesible sin cuenta): https://expo.dev/accounts/pamela85/projects/taskflow/builds/7b9753a1-9768-4258-9543-adb527dc2651
+* **EAS Update** (canal `production`, requiere cuenta de Expo con acceso al proyecto para ver el detalle): https://expo.dev/accounts/pamela85/projects/taskflow/updates/19a89803-797c-4685-9def-31e4fd10bc3e
+
 ## URL Expo 
 
 https://expo.dev/accounts/pamela85/projects/taskflow
 
-## 📦 Publicación
-
-* **EAS Update** (versión funcional publicada, canal `production`): https://expo.dev/accounts/pamela85/projects/taskflow/updates/19a89803-797c-4685-9def-31e4fd10bc3e
-* **EAS Build** (APK instalable, perfil `preview`): https://expo.dev/accounts/pamela85/projects/taskflow/builds/7b9753a1-9768-4258-9543-adb527dc2651
-  * Descarga directa del `.apk`: https://expo.dev/artifacts/eas/4V6cvWm3x6nn_s8xlZh9ldbix1V8c5V6nBytkT21ZPU.apk
+> Nota: esta página del proyecto y la del update de arriba requieren iniciar sesión en una cuenta de Expo con acceso. Para instalar y probar la app sin cuenta, usar el APK de la sección anterior.
 
 ## Emulador
 
